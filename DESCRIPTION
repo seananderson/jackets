@@ -2,7 +2,7 @@ Package: jackets
 Title: Manipulation and plotting of yellow jacket RFID data
 Description: This package contains functions for manipulating and plotting RFID
     data from yellow jackets. This project is being led by Nathan Derstine as
-    part of a Masters thesis at Simon Fraser University.
+    part of a PhD thesis at Simon Fraser University.
 Version: 0.1
 Authors@R: c(person("Sean", "Anderson", email =
     "sean@seananderson.ca", role = c("aut", "cre")),
