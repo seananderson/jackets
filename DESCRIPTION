@@ -1,0 +1,17 @@
+Package: jackets
+Title: Manipulation and plotting of yellow jacket RFID data
+Description: This package contains functions for manipulating and plotting RFID
+    data from yellow jackets. This project is being led by Nathan Derstine as
+    part of a Masters thesis at Simon Fraser University.
+Version: 0.1
+Authors@R: c(person("Sean", "Anderson", email =
+    "sean@seananderson.ca", role = c("aut", "cre")),
+    person("Nathan", "Derstine", email = "nderstin@sfu.ca", role =
+    "aut"))
+Depends:
+    R (>= 3.0.2)
+License: GPL-3
+LazyData: true
+Collate:
+    'get_wasp_trips.r'
+    'jackets-package.r'
