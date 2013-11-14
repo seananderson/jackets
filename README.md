@@ -3,7 +3,8 @@
 The package can be installed and loaded with:
 
 ```S
-install.github("jackets", "seananderson")
+library(devtools)
+install_github("jackets", "seananderson")
 library(jackets)
 ```
 
