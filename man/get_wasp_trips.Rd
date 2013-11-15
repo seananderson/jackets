@@ -5,7 +5,7 @@
   get_wasp_trips(uid, address, time,
     time_format = "\%m/\%d/\%Y \%H:\%M:\%S",
     diff_address_home = 2, diff_address_away = -2,
-    print_progress = TRUE)
+    print_progress = TRUE, correct_time_stamps = TRUE)
 }
 \arguments{
   \item{uid}{A vector of uid values.}
@@ -29,6 +29,9 @@
   \item{print_progress}{Should the uid be printed? Useful
   to monitor progress when running this function over large
   datasets.}
+
+  \item{correct_time_stamps}{Should the time stamps be
+  corrected. The values are hardcoded in the function.}
 }
 \value{
   A data.frame containing columns of time, trip type, and

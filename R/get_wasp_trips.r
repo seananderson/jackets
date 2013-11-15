@@ -23,6 +23,8 @@
 #' that should correspond to a ways being considered "away".
 #' @param print_progress Should the uid be printed? Useful to monitor
 #' progress when running this function over large datasets.
+#' @param correct_time_stamps Should the time stamps be corrected. The
+#' values are hardcoded in the function.
 #' @return
 #' A data.frame containing columns of time, trip type, and time away
 #' or home.
@@ -30,10 +32,9 @@
 
 get_wasp_trips <- function(uid, address, time, time_format =
   "%m/%d/%Y %H:%M:%S", diff_address_home = 2, diff_address_away = -2,
-  print_progress = TRUE) {
+  print_progress = TRUE, correct_time_stamps = TRUE) {
   # Make a data.frame with the arguments:
   x <- data.frame(uid, address, time)
-  #if(as.character(x$uid[1]) == "4F 09 30 01 0B 00 12 E0") browser()
   # Print the uid to keep track of progress:
   if(print_progress) message(as.character(x$uid[1]))
   # Take a first difference on the address column:
@@ -52,21 +53,25 @@ get_wasp_trips <- function(uid, address, time, time_format =
   x$address <- NULL
   x$uid <- NULL
   # And make a dummy time object that we'll use below
-  dummy_time <- strptime("01/01/1980 00:00:00", format = time_format)
+  dummy_time <- strptime("01/01/1980 14:47:10", format = time_format)
   # If there are any rows to work with, take the first difference of the
   # times. This gives us time between trips:
   if (nrow(x) > 0) {
-    # Now correct the time stamps:
-    actual_time <- strptime("11/05/2013 14:47:10", format = time_format)
-    preset_time <- strptime("02/11/2005 05:50:34", format = time_format)
-    x$time <- strptime(x$time, format = time_format)
-    x$time <- x$time + (actual_time - preset_time)
-    x$time_diff <- c(NA, diff(x$time))
+    if(correct_time_stamps) {
+      # Now correct the time stamps:
+      actual_time <- strptime("11/05/2013 14:47:10", format = time_format)
+      preset_time <- strptime("02/11/2005 05:50:34", format = time_format)
+      x$time <- x$time + (actual_time - preset_time)
+    }
+      x$time <- strptime(x$time, format = time_format)
+
+    x$time_diff <- as.numeric(c(NA, diff(x$time)))
     out <- x
   } else {
     # data.table needs a matching data.frame; we'll delete these rows after
     out <- data.frame(time = dummy_time, trips = "IGNORE", time_diff =
-      dummy_time - dummy_time, stringsAsFactors = FALSE)
+      999, stringsAsFactors = FALSE)
+    #out$time_diff <- as.numeric(out$time_diff)
   }
   # And return the data frame for this chunk:
   return(out)
