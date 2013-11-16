@@ -1,6 +1,6 @@
 # Warning: First, you need to:
 # 1. Install the OS X command line tools (for a C compiler)
-# 2. install.packages("Rccp", type = "source")
+# 2. install.packages("Rcpp", type = "source")
 # 3. install.packages("devtools")
 # 4. devtools::install_github("jackets", "seananderson")
 # 5. devtools::install_github("dplyr")
