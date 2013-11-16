@@ -4,7 +4,9 @@
 -->
 
 First, you need to:
-[Install the OS X command line tools](http://www.rstudio.com/ide/docs/packages/prerequisites) (for a C++ compiler)
+[Install the OS X command line tools](http://www.rstudio.com/ide/docs/packages/prerequisites) (for a C++ compiler).
+
+Once you've done that, we can install some necessary packages:
 
 
 ```r
@@ -25,7 +27,7 @@ library(data.table)
 
 
 To read and save the `.rda` files in Dropbox, first set your working
-directory to the `wasp-trips/data` folder before running this code:
+directory to the `wasp-trips/data` folder before running the next chunk of code. Alternatively, you can skip this chunk and load the data in the next chunk.
 
 
 ```r
