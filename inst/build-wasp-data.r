@@ -38,6 +38,7 @@ gc()
 wasps1_trips$group <- 1
 wasps2_trips$group <- 2
 wasp <- rbind(wasps1_trips, wasps2_trips)
+row.names(wasp) <- NULL
 rm(wasps1_trips, wasps2_trips)
 
 save(wasp, file = "wasp.rda")
