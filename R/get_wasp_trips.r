@@ -53,14 +53,15 @@ get_wasp_trips <- function(x, time_format = "%m/%d/%Y %H:%M:%S",
   # If there are any rows to work with, take the first difference of the
   # times. This gives us time between trips:
   if (nrow(x) > 0) {
-    x$time <- strptime(x$time, format = time_format)
+    x$time <- as.POSIXct(strptime(x$time, format = time_format))
     if(correct_time_stamps) {
-      # Now correct the time stamps:
-      actual_time <- strptime("11/05/2013 14:47:10", format = time_format)
-      preset_time <- strptime("02/11/2005 05:50:34", format = time_format)
+      actual_time <- as.POSIXct(strptime("11/05/2013 14:47:10", format
+          = time_format))
+      preset_time <- as.POSIXct(strptime("02/11/2005 05:50:34", format
+        = time_format))
       x$time <- x$time + (actual_time - preset_time)
     }
-    x$time_diff <- as.numeric(c(NA, diff(x$time)))
+    x$time_diff <- as.numeric(c(NA, diff(lubridate::seconds(x$time))))
     out <- x
     return(out)
   }
