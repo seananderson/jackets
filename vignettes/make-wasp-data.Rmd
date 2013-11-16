@@ -114,8 +114,8 @@ facet_grid(caste~group, scales = "free_y")
 ```
 
 ```{r, warning=FALSE, message=FALSE}
-ggplot(wasp, aes(time_diff)) + geom_histogram() +
-facet_grid(caste~trips, scales = "free_y") + scale_x_log10()
+ggplot(wasp, aes(time_diff)) + geom_histogram(aes(fill = trips)) +
+facet_grid(caste~group, scales = "free_y") + scale_x_log10()
 ```
 
 ```{r, warning=FALSE, fig.width=10}
