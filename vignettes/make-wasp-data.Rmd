@@ -6,16 +6,14 @@
 First, you need to:
 [Install the OS X command line tools](http://www.rstudio.com/ide/docs/packages/prerequisites) (for a C++ compiler)
 
-```{r}
+```{r, eval=FALSE}
 install.packages("Rcpp", type = "source")
 install.packages("devtools")
 devtools::install_github("jackets", "seananderson")
 devtools::install_github("dplyr")
 ```
 
-Restart R if you've previously loaded plyr.
-
-Then
+Then load the jackets and data.table packages:
 
 ```{r}
 library(jackets)
@@ -64,7 +62,7 @@ We can now load the `wasp.rda` file from within the package with:
 load("wasp.rda")
 ```
 
-We have to unload dplyr to load plyr:
+Calculate hour of day:
 
 ```{r}
 wasp$time_trunc <- as.POSIXct(trunc(wasp$time, "days"))
@@ -72,13 +70,13 @@ wasp$hour_of_day <- as.numeric(difftime(wasp$time, wasp$time_trunc,
     units = "hours"))
 ```
 
-Now merge in the tag-caste data
+Now merge in the tag-caste data:
 
 ```{r}
 load("cohorts_1.rda")
 cohorts_1$caste <- as.character(cohorts_1$caste)
 cohorts_1$date_tagged <- as.character(cohorts_1$date_tagged)
-cohorts_2 <- read.csv("cohorts.csv", stringsAsFactors = FALSE)
+cohorts_2 <- read.csv("cohorts_2.csv", stringsAsFactors = FALSE)
 cohorts_1$group <- 1
 cohorts_2$group <- 2
 cohorts <- rbind(cohorts_1, cohorts_2)
@@ -89,12 +87,42 @@ cohorts$date_tagged <- as.POSIXct(cohorts$date_tagged)
 wasp <- transform(wasp, tag = paste0(substr(uid, 1, 2), substr(uid, 4, 5)))
 wasp$uid <- NULL
 
-wasp <- plyr::join(wasp, cohorts, by = c("tag", "group"))
+library(plyr)
+wasp <- join(wasp, cohorts, by = c("tag", "group"))
 ```
 
+And create some summary data:
+
 ```{r}
+wasp_summary <- ddply(wasp, c("trips", "tag", "caste", "group"), summarize,
+  mean_trip = mean(time_diff/60/60, na.rm = TRUE), median_trip =
+  median(time_diff/60/60, na.rm = TRUE), l_quant =
+  quantile(time_diff/60/60, 0.25, na.rm = TRUE), u_quant =
+  quantile(time_diff/60/60, 0.75, na.rm = TRUE))
+
+wasp_summary <- transform(wasp_summary, ordered_tag = reorder(tag,
+    -median_trip))
+save(wasp_summary, file = "wasp_summary.rda")
+```
+
+Look at some plots:
+
+```{r, warning=FALSE, message=FALSE}
 library(ggplot2)
-ggplot(na.omit(wasp), aes(hour_of_day)) + geom_histogram(aes(fill = trips)) +
+ggplot(wasp, aes(hour_of_day)) + geom_histogram(aes(fill = trips)) +
 facet_grid(caste~group, scales = "free_y")
 ```
 
+```{r, warning=FALSE, message=FALSE}
+ggplot(wasp, aes(time_diff)) + geom_histogram() +
+facet_grid(caste~trips, scales = "free_y") + scale_x_log10()
+```
+
+```{r, warning=FALSE, fig.width=10}
+ggplot(wasp_summary, aes(ordered_tag, median_trip, colour = trips, pch
+    = caste)) + geom_pointrange(aes(ymin =
+  l_quant, ymax = u_quant)) + scale_y_log10() +
+  scale_shape_manual(values=c(21, 19)) + scale_linetype_manual(values
+    = c(2, 1)) + theme(axis.text.x=element_text(angle=90, size = 8)) +
+  xlab("") + ylab("Median trip length (hours)") + facet_wrap(~group, nrow = 2, scales = "free_x")
+```
