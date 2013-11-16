@@ -128,8 +128,8 @@ ggplot(wasp, aes(hour_of_day)) + geom_histogram(aes(fill = trips)) + facet_grid(
 
 
 ```r
-ggplot(wasp, aes(time_diff)) + geom_histogram() + facet_grid(caste ~ trips, 
-    scales = "free_y") + scale_x_log10()
+ggplot(wasp, aes(time_diff)) + geom_histogram(aes(fill = trips)) + facet_grid(caste ~ 
+    group, scales = "free_y") + scale_x_log10()
 ```
 
 ![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9.png) 
