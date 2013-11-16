@@ -4,6 +4,8 @@
 # 3. install.packages("devtools")
 # 4. devtools::install_github("jackets", "seananderson")
 # 5. devtools::install_github("dplyr")
+# 6. restart R if you've previously loaded plyr
+# Then...
 
 library(jackets)
 library(dplyr)
