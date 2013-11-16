@@ -2,18 +2,18 @@
 \alias{get_wasp_trips}
 \title{Calculate wasp trips from raw RFID data}
 \usage{
-  get_wasp_trips(uid, address, time,
+  get_wasp_trips(x,
     time_format = "\%m/\%d/\%Y \%H:\%M:\%S",
     diff_address_home = 2, diff_address_away = -2,
     print_progress = TRUE, correct_time_stamps = TRUE)
 }
 \arguments{
-  \item{uid}{A vector of uid values.}
-
-  \item{address}{A vector of numeric addresses.}
-
-  \item{time}{A vector of times in character format. Should
-  match the format specified in \code{time_format}.}
+  \item{x}{A data.frame containing columns named
+  \code{uid}, \code{address}, and \code{time}. The
+  \code{time} should be in character format and match the
+  format declared to the argument \code{time_format}.
+  \code{uid} should be of type character and \code{address}
+  of type integer.}
 
   \item{time_format}{Time format to be passed to
   \code{strptime}.}
@@ -31,11 +31,12 @@
   datasets.}
 
   \item{correct_time_stamps}{Should the time stamps be
-  corrected. The values are hardcoded in the function.}
+  corrected. The values are currently hard-coded into the
+  function.}
 }
 \value{
-  A data.frame containing columns of time, trip type, and
-  time away or home.
+  A data.frame containing columns of time, uid, trip type
+  (away or home), and time away or home.
 }
 \description{
   Calculate wasp trips from raw RFID data. This function is
