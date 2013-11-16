@@ -38,8 +38,11 @@ gc()
 wasps1_trips$group <- 1
 wasps2_trips$group <- 2
 wasp <- rbind(wasps1_trips, wasps2_trips)
-row.names(wasp) <- NULL
 rm(wasps1_trips, wasps2_trips)
+
+# convert to POSIXct to use in data frames / ddply
+row.names(wasp) <- NULL
+wasp$time <- as.POSIXct(wasp$time)
 
 save(wasp, file = "wasp.rda")
 rm(wasp)
