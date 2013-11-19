@@ -92,7 +92,13 @@ wasp$uid <- NULL
 library(plyr)
 wasp <- join(wasp, cohorts, by = c("tag", "group"))
 ```
+Calculate age based on the date_tagged cohort data.
 
+```{r}
+
+wasp$age <- wasp$time_trunc - wasp$date_tagged
+
+```
 And create some summary data:
 
 ```{r}
