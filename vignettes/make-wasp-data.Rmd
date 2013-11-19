@@ -97,8 +97,9 @@ And create some summary data:
 
 ```{r}
 wasp_summary <- ddply(wasp, c("trips", "tag", "caste", "group"), summarize,
-  mean_trip = mean(time_diff/60/60, na.rm = TRUE), median_trip =
-  median(time_diff/60/60, na.rm = TRUE), l_quant =
+  mean_trip = mean(time_diff/60/60, na.rm = TRUE), numb_trips = length(trips), 
+  mean_trip_sd = sd(time_diff/60/60, na.rm = TRUE),
+  median_trip = median(time_diff/60/60, na.rm = TRUE), l_quant =
   quantile(time_diff/60/60, 0.25, na.rm = TRUE), u_quant =
   quantile(time_diff/60/60, 0.75, na.rm = TRUE))
 
