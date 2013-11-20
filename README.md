@@ -2,6 +2,8 @@
 
 The package can be installed and loaded with:
 
+Some extra text
+
 ```S
 library(devtools)
 install_github("jackets", "seananderson")
