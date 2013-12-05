@@ -16,17 +16,21 @@ library(dplyr)
 # directory to the wasp-trips/data folder before running this code:
 
 # Calculate time differences to correct the recorded times:
-actual_time_w1 <- as.POSIXct(strptime("11/05/2013 14:47:10", format
-   = "%m/%d/%Y %H:%M:%S"))
-preset_time_w1 <- as.POSIXct(strptime("02/11/2005 05:50:34", format 
+
+# wasp1 should be 7 hours earlier:
+actual_time_w1 <- as.POSIXct(strptime("01/01/2013 01:00:00", format
+  = "%m/%d/%Y %H:%M:%S"))
+preset_time_w1 <- as.POSIXct(strptime("01/01/2013 08:00:00", format 
   = "%m/%d/%Y %H:%M:%S"))
 w1_add_time <- actual_time_w1 - preset_time_w1
 
-actual_time_w2 <- as.POSIXct(strptime("01/01/2013 08:00:00", format
+# wasp2 should be quite a bit later:
+actual_time_w2 <- as.POSIXct(strptime("11/05/2013 14:47:10", format
   = "%m/%d/%Y %H:%M:%S"))
-preset_time_w2 <- as.POSIXct(strptime("01/01/2013 01:00:00", format 
+preset_time_w2 <- as.POSIXct(strptime("02/11/2005 05:50:34", format 
   = "%m/%d/%Y %H:%M:%S"))
 w2_add_time <- actual_time_w2 - preset_time_w2
+
 
 # Now process the 2 sets of data:
 load("wasps1.rda")
