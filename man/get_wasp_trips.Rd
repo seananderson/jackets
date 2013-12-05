@@ -35,8 +35,9 @@
   \code{time_format}.}
 }
 \value{
-  A data.frame containing columns of time, uid, trip type
-  (away or home), and time away or home.
+  A data.frame containing columns of time, address, uid,
+  diff_address, trip (away or home), and time_diff (time
+  difference in seconds).
 }
 \description{
   Calculate wasp trips from raw RFID data. This function is

@@ -22,8 +22,8 @@
 #'   when running this function over large datasets.
 #' @param add_time A quantity of time to add to each time recording. Should be
 #'   in the same format as \code{time_format}.
-#' @return A data.frame containing columns of time, uid, trip type (away or 
-#' home), and time away or home.
+#' @return A data.frame containing columns of time, address, uid, diff_address, trip (away or 
+#' home), and time_diff (time difference in seconds).
 #' @export
 
 get_wasp_trips <- function(x, time_format = "%m/%d/%Y %H:%M:%S",
