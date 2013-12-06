@@ -4,7 +4,7 @@
 \usage{
   get_wasp_trips(x,
     time_format = "\%m/\%d/\%Y \%H:\%M:\%S",
-    diff_address_home = 2, diff_address_away = -2,
+    diff_address_arriving = -2, diff_address_leaving = 2,
     print_progress = TRUE, add_time = 0)
 }
 \arguments{
@@ -18,13 +18,13 @@
   \item{time_format}{Time format to be passed to
   \code{strptime}.}
 
-  \item{diff_address_home}{First difference value of
+  \item{diff_address_arriving}{First difference value of
   \code{address} that should correspond to a ways being
-  considered "home".}
+  considered "arriving".}
 
-  \item{diff_address_away}{First difference value of
+  \item{diff_address_leaving}{First difference value of
   \code{address} that should correspond to a ways being
-  considered "away".}
+  considered "leaving".}
 
   \item{print_progress}{Should the uid be printed? Useful
   to monitor progress when running this function over large
@@ -36,8 +36,8 @@
 }
 \value{
   A data.frame containing columns of time, address, uid,
-  diff_address, trip (away or home), and time_diff (time
-  difference in seconds).
+  diff_address, trip (leaving or arriving), and time_diff
+  (time difference in seconds).
 }
 \description{
   Calculate wasp trips from raw RFID data. This function is

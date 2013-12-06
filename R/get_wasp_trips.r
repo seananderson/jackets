@@ -14,20 +14,20 @@
 #'   the format declared to the argument \code{time_format}. \code{uid} should
 #'   be of type character and \code{address} of type integer.
 #' @param time_format Time format to be passed to \code{strptime}.
-#' @param diff_address_home First difference value of \code{address} that
-#'   should correspond to a ways being considered "home".
-#' @param diff_address_away First difference value of \code{address} that
-#'   should correspond to a ways being considered "away".
+#' @param diff_address_arriving First difference value of \code{address} that
+#'   should correspond to a ways being considered "arriving".
+#' @param diff_address_leaving First difference value of \code{address} that
+#'   should correspond to a ways being considered "leaving".
 #' @param print_progress Should the uid be printed? Useful to monitor progress
 #'   when running this function over large datasets.
 #' @param add_time A quantity of time to add to each time recording. Should be
 #'   in the same format as \code{time_format}.
-#' @return A data.frame containing columns of time, address, uid, diff_address, trip (away or 
-#' home), and time_diff (time difference in seconds).
+#' @return A data.frame containing columns of time, address, uid, diff_address,
+#'  trip (leaving or arriving), and time_diff (time difference in seconds).
 #' @export
 
 get_wasp_trips <- function(x, time_format = "%m/%d/%Y %H:%M:%S",
-  diff_address_home = 2, diff_address_away = -2,
+  diff_address_arriving = -2, diff_address_leaving = 2,
   print_progress = TRUE, add_time = 0) {
   # Print the uid to keep track of progress:
   if(print_progress) message(as.character(x$uid[1]))
@@ -35,12 +35,12 @@ get_wasp_trips <- function(x, time_format = "%m/%d/%Y %H:%M:%S",
   x$diff_address <- c(NA, diff(x$address))
   # Set up a new column and set the values all to NA:
   x$trip <- NA
-  # Now set all trip values to "home" if the diff_address matches
-  # diff_address_home:
-  x$trip[x$diff_address == diff_address_home] <- "home"
-  # And "away"...
-  x$trip[x$diff_address == diff_address_away] <- "away"
-  # Remove all rows that weren't home or away:
+  # Now set all trip values to "arriving" if the diff_address matches
+  # diff_address_arriving:
+  x$trip[x$diff_address == diff_address_arriving] <- "arriving"
+  # And "leaving"...
+  x$trip[x$diff_address == diff_address_leaving] <- "leaving"
+  # Remove all rows that weren't arriving or leaving:
   x <- x[-which(is.na(x$trip)), ]
   # If there are any rows to work with, take the first difference of the
   # times. This gives us time between trips:
