@@ -37,7 +37,7 @@ load("wasps1.rda")
 wasps1_df <- group_by(wasps1, uid)
 rm(wasps1)
 wasps1_trips <- do(wasps1_df, function(x) get_wasp_trips(x,
-    diff_address_home = -1, diff_address_away = 1,
+    diff_address_arriving = -1, diff_address_leaving = 1,
     add_time = w1_add_time))
 rm(wasps1_df)
 wasps1_trips <- do.call("rbind", wasps1_trips)
@@ -48,7 +48,7 @@ load("wasps2.rda")
 wasps2_df <- group_by(wasps2, uid)
 rm(wasps2)
 wasps2_trips <- do(wasps2_df, function(x) get_wasp_trips(x,
-    diff_address_home = 2, diff_address_away = -2,
+    diff_address_arriving = -2, diff_address_leaving = 2,
     add_time = w2_add_time))
 rm(wasps2_df)
 wasps2_trips <- do.call("rbind", wasps2_trips)
