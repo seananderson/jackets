@@ -4,8 +4,8 @@
 \usage{
   get_wasp_trips(x,
     time_format = "\%m/\%d/\%Y \%H:\%M:\%S",
-    diff_address_home = 2, diff_address_away = -2,
-    print_progress = TRUE, correct_time_stamps = TRUE)
+    diff_address_arriving = -2, diff_address_leaving = 2,
+    print_progress = TRUE, add_time = 0)
 }
 \arguments{
   \item{x}{A data.frame containing columns named
@@ -18,32 +18,32 @@
   \item{time_format}{Time format to be passed to
   \code{strptime}.}
 
-  \item{diff_address_home}{First difference value of
+  \item{diff_address_arriving}{First difference value of
   \code{address} that should correspond to a ways being
-  considered "home".}
+  considered "arriving".}
 
-  \item{diff_address_away}{First difference value of
+  \item{diff_address_leaving}{First difference value of
   \code{address} that should correspond to a ways being
-  considered "away".}
+  considered "leaving".}
 
   \item{print_progress}{Should the uid be printed? Useful
   to monitor progress when running this function over large
   datasets.}
 
-  \item{correct_time_stamps}{Should the time stamps be
-  corrected. The values are currently hard-coded into the
-  function.}
+  \item{add_time}{A quantity of time to add to each time
+  recording. Should be in the same format as
+  \code{time_format}.}
 }
 \value{
-  A data.frame containing columns of time, uid, trip type
-  (away or home), and time away or home.
+  A data.frame containing columns of time, address, uid,
+  diff_address, trip (leaving or arriving), and time_diff
+  (time difference in seconds).
 }
 \description{
   Calculate wasp trips from raw RFID data. This function is
-  structured for use with the \pkg{data.table} package. In
-  other words, it is meant to be used on a chunk of data
-  (say for one uid), and the argument input format is
-  conducive to working with the \pkg{data.table} package.
+  structured for use with the \pkg{dplyr} package. In other
+  words, it is meant to be used on a chunk of data (say for
+  one uid).
 }
 \details{
   Note that if there are no trips recorded then the
