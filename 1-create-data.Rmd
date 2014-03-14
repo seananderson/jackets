@@ -78,7 +78,10 @@ Now merge in the tag-caste data:
 
 ```{r}
 load("cohorts_1.rda")
+# all data matching?
 cohorts_1$caste <- as.character(cohorts_1$caste)
+# there's a typo: 4245 should be 4225:
+cohorts_1$caste <- sub(4245, 4225, cohorts_1$caste)
 cohorts_1$date_tagged <- as.character(cohorts_1$date_tagged)
 cohorts_2 <- read.csv("cohorts_2.csv", stringsAsFactors = FALSE)
 cohorts_1$group <- 1
@@ -95,6 +98,13 @@ library(plyr)
 wasp_caste <- join(wasp, cohorts, by = c("tag", "group"))
 last_trip <- ddply(wasp_caste, c("tag", "caste"), function(x) tail(x, n = 1))
 first_trip <- ddply(wasp_caste, c("tag", "caste"), function(x) head(x, n = 1))
+```
+
+Did all the tags match?
+
+```{r}
+unique(cohorts$tag)[!unique(cohorts$tag) %in% unique(wasp$tag)]
+unique(wasp$tag)[!unique(wasp$tag) %in% unique(cohorts$tag)]
 ```
 
 Calculate age based on the date_tagged cohort data.
