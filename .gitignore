@@ -2,3 +2,4 @@ vignettes/make-wasp-data.html
 .Rproj.user
 .Rhistory
 R/.Rapp.history
+cache/*
