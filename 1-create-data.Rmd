@@ -1,0 +1,119 @@
+Run the `.xsl` style sheet as shown in `make-data.sh` on the `.xml` files. Read the `.csv ` files into R and `save()` as `.rda` files.
+
+```{r}
+library(dplyr)
+```
+
+To read and save the .rda files in Dropbox, first set your working
+directory to the wasp-trips/data folder before running this code:
+
+Calculate time differences to correct the recorded times:
+
+wasp1 should be 7 hours earlier:
+
+```{r}
+actual_time_w1 <- as.POSIXct(strptime("01/01/2013 01:00:00", format
+  = "%m/%d/%Y %H:%M:%S"))
+preset_time_w1 <- as.POSIXct(strptime("01/01/2013 08:00:00", format
+  = "%m/%d/%Y %H:%M:%S"))
+w1_add_time <- actual_time_w1 - preset_time_w1
+```
+
+wasp2 should be quite a bit later:
+```{r}
+actual_time_w2 <- as.POSIXct(strptime("11/05/2013 14:47:10", format
+  = "%m/%d/%Y %H:%M:%S"))
+preset_time_w2 <- as.POSIXct(strptime("02/11/2005 05:50:34", format
+  = "%m/%d/%Y %H:%M:%S"))
+w2_add_time <- actual_time_w2 - preset_time_w2
+```
+
+Now process the 2 sets of data:
+
+```{r, eval=FALSE}
+load("wasps1.rda")
+wasps1_df <- group_by(wasps1, uid)
+rm(wasps1)
+wasps1_trips <- do(wasps1_df, function(x) get_wasp_trips(x,
+    diff_address_arriving = -1, diff_address_leaving = 1,
+    add_time = w1_add_time))
+rm(wasps1_df)
+wasps1_trips <- do.call("rbind", wasps1_trips)
+wasps1_trips <- as.data.frame(wasps1_trips)
+gc()
+
+load("wasps2.rda")
+wasps2_df <- group_by(wasps2, uid)
+rm(wasps2)
+wasps2_trips <- do(wasps2_df, function(x) get_wasp_trips(x,
+    diff_address_arriving = -2, diff_address_leaving = 2,
+    add_time = w2_add_time))
+rm(wasps2_df)
+wasps2_trips <- do.call("rbind", wasps2_trips)
+wasps2_trips <- as.data.frame(wasps2_trips)
+gc()
+
+wasps1_trips$group <- 1
+wasps2_trips$group <- 2
+wasp <- rbind(wasps1_trips, wasps2_trips)
+rm(wasps1_trips, wasps2_trips)
+
+# convert to POSIXct to use in data frames / ddply / ggplot2
+row.names(wasp) <- NULL
+wasp$time <- as.POSIXct(wasp$time)
+
+save(wasp, file = "wasp.rda")
+```
+
+Calculate hour of day:
+
+```{r}
+wasp$time_trunc <- as.POSIXct(trunc(wasp$time, "days"))
+wasp$hour_of_day <- as.numeric(difftime(wasp$time, wasp$time_trunc,
+    units = "hours"))
+```
+
+Now merge in the tag-caste data:
+
+```{r}
+load("cohorts_1.rda")
+cohorts_1$caste <- as.character(cohorts_1$caste)
+cohorts_1$date_tagged <- as.character(cohorts_1$date_tagged)
+cohorts_2 <- read.csv("cohorts_2.csv", stringsAsFactors = FALSE)
+cohorts_1$group <- 1
+cohorts_2$group <- 2
+cohorts <- rbind(cohorts_1, cohorts_2)
+cohorts$date_tagged <- strptime(cohorts$date_tagged, format = "%Y-%m-%d")
+cohorts$date_tagged <- as.POSIXct(cohorts$date_tagged)
+
+# Create a transformed uid column that matches the tag format:
+wasp <- transform(wasp, tag = paste0(substr(uid, 1, 2), substr(uid, 4, 5)))
+wasp$uid <- NULL
+
+library(plyr)
+wasp_caste <- join(wasp, cohorts, by = c("tag", "group"))
+last_trip <- ddply(wasp_caste, c("tag", "caste"), function(x) tail(x, n = 1))
+first_trip <- ddply(wasp_caste, c("tag", "caste"), function(x) head(x, n = 1))
+```
+
+Calculate age based on the date_tagged cohort data.
+
+```{r}
+wasp_caste$age <- wasp_caste$time_trunc - wasp_caste$date_tagged
+save(wasp_caste, file = "wasp_caste.rda")
+```
+
+And create some summary data:
+
+```{r}
+wasp_summary <- ddply(wasp_caste, c("trips", "tag", "caste", "group"), summarize,
+  mean_trip = mean(time_diff/60/60, na.rm = TRUE), numb_trips = length(trips),
+  mean_trip_sd = sd(time_diff/60/60, na.rm = TRUE),
+  median_trip = median(time_diff/60/60, na.rm = TRUE), l_quant =
+  quantile(time_diff/60/60, 0.25, na.rm = TRUE), u_quant =
+  quantile(time_diff/60/60, 0.75, na.rm = TRUE))
+
+wasp_summary <- transform(wasp_summary, ordered_tag = reorder(tag,
+    -median_trip))
+save(wasp_summary, file = "wasp_summary.rda")
+```
