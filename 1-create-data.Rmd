@@ -31,6 +31,7 @@ w2_add_time <- actual_time_w2 - preset_time_w2
 Now process the 2 sets of data:
 
 ```{r, eval=FALSE}
+source("get_wasp_trips.R") # function to parse the trip data
 load("wasps1.rda")
 wasps1_df <- group_by(wasps1, uid)
 rm(wasps1)

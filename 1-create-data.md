@@ -38,6 +38,7 @@ Now process the 2 sets of data:
 
 
 ```r
+source("get_wasp_trips.R") # function to parse the trip data
 load("wasps1.rda")
 wasps1_df <- group_by(wasps1, uid)
 rm(wasps1)
