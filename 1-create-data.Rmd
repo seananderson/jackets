@@ -30,13 +30,13 @@ w2_add_time <- actual_time_w2 - preset_time_w2
 
 Now process the 2 sets of data:
 
-```{r, eval=FALSE}
+```{r assign-address, eval=TRUE, cache=TRUE}
 source("get_wasp_trips.R") # function to parse the trip data
 load("wasps1.rda")
 wasps1_df <- group_by(wasps1, uid)
 rm(wasps1)
 wasps1_trips <- do(wasps1_df, function(x) get_wasp_trips(x,
-    diff_address_arriving = -1, diff_address_leaving = 1,
+    diff_address_arriving = 1, diff_address_leaving = -1,
     add_time = w1_add_time))
 rm(wasps1_df)
 wasps1_trips <- do.call("rbind", wasps1_trips)
@@ -77,7 +77,6 @@ wasp$hour_of_day <- as.numeric(difftime(wasp$time, wasp$time_trunc,
 Now merge in the tag-caste data:
 
 ```{r}
-load("wasp.rda")
 load("cohorts_1.rda")
 cohorts_1$caste <- as.character(cohorts_1$caste)
 cohorts_1$date_tagged <- as.character(cohorts_1$date_tagged)
@@ -108,8 +107,8 @@ save(wasp_caste, file = "wasp_caste.rda")
 And create some summary data:
 
 ```{r}
-wasp_summary <- ddply(wasp_caste, c("trips", "tag", "caste", "group"), summarize,
-  mean_trip = mean(time_diff/60/60, na.rm = TRUE), numb_trips = length(trips),
+wasp_summary <- ddply(wasp_caste, c("trip", "tag", "caste", "group"), summarize,
+  mean_trip = mean(time_diff/60/60, na.rm = TRUE), numb_trips = length(trip),
   mean_trip_sd = sd(time_diff/60/60, na.rm = TRUE),
   median_trip = median(time_diff/60/60, na.rm = TRUE), l_quant =
   quantile(time_diff/60/60, 0.25, na.rm = TRUE), u_quant =

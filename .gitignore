@@ -3,3 +3,5 @@ vignettes/make-wasp-data.html
 .Rhistory
 R/.Rapp.history
 cache/*
+
+*.html
