@@ -87,6 +87,7 @@ Now merge in the tag-caste data:
 
 
 ```r
+load("wasp.rda")
 load("cohorts_1.rda")
 cohorts_1$caste <- as.character(cohorts_1$caste)
 cohorts_1$date_tagged <- as.character(cohorts_1$date_tagged)
@@ -99,13 +100,6 @@ cohorts$date_tagged <- as.POSIXct(cohorts$date_tagged)
 
 # Create a transformed uid column that matches the tag format:
 wasp <- transform(wasp, tag = paste0(substr(uid, 1, 2), substr(uid, 4, 5)))
-```
-
-```
-## Error: object 'uid' not found
-```
-
-```r
 wasp$uid <- NULL
 
 library(plyr)

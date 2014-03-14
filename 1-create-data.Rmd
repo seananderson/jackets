@@ -76,6 +76,7 @@ wasp$hour_of_day <- as.numeric(difftime(wasp$time, wasp$time_trunc,
 Now merge in the tag-caste data:
 
 ```{r}
+load("wasp.rda")
 load("cohorts_1.rda")
 cohorts_1$caste <- as.character(cohorts_1$caste)
 cohorts_1$date_tagged <- as.character(cohorts_1$date_tagged)
