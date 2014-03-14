@@ -96,8 +96,7 @@ wasp$uid <- NULL
 
 library(plyr)
 wasp_caste <- join(wasp, cohorts, by = c("tag", "group"))
-last_trip <- ddply(wasp_caste, c("tag", "caste"), function(x) tail(x, n = 1))
-first_trip <- ddply(wasp_caste, c("tag", "caste"), function(x) head(x, n = 1))
+
 ```
 
 Did all the tags match?
@@ -107,10 +106,12 @@ unique(cohorts$tag)[!unique(cohorts$tag) %in% unique(wasp$tag)]
 unique(wasp$tag)[!unique(wasp$tag) %in% unique(cohorts$tag)]
 ```
 
-Calculate age based on the date_tagged cohort data.
+Calculate age based on the date_tagged cohort data, and then pull out the first and last trip taken by each wasp.
 
 ```{r}
 wasp_caste$age <- wasp_caste$time_trunc - wasp_caste$date_tagged
+last_trip <- ddply(wasp_caste, c("tag", "caste"), function(x) tail(x, n = 1))
+first_trip <- ddply(wasp_caste, c("tag", "caste"), function(x) head(x, n = 1))
 save(wasp_caste, file = "wasp_caste.rda")
 ```
 
